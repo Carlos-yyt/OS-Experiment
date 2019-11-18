@@ -35,12 +35,14 @@ public:
     QPushButton *checkTaskFileBtn;
     QLabel *label;
     QGroupBox *groupBox_2;
-    QTextBrowser *textBrowser;
-    QTextBrowser *textBrowser_2;
-    QTextBrowser *textBrowser_3;
+    QTextBrowser *runQueueTextBrowser;
+    QTextBrowser *readyQueueTextBrowser;
+    QTextBrowser *waitQueueTextBrowser;
     QLabel *label_2;
     QLabel *label_3;
     QLabel *label_4;
+    QLabel *label_5;
+    QLabel *curProLab;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -49,7 +51,7 @@ public:
     {
         if (RunProcess->objectName().isEmpty())
             RunProcess->setObjectName(QStringLiteral("RunProcess"));
-        RunProcess->resize(1016, 617);
+        RunProcess->resize(1565, 726);
         centralWidget = new QWidget(RunProcess);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         groupBox = new QGroupBox(centralWidget);
@@ -57,7 +59,7 @@ public:
         groupBox->setGeometry(QRect(10, 10, 431, 541));
         taskFiletextBrowser = new QTextBrowser(groupBox);
         taskFiletextBrowser->setObjectName(QStringLiteral("taskFiletextBrowser"));
-        taskFiletextBrowser->setGeometry(QRect(10, 70, 411, 461));
+        taskFiletextBrowser->setGeometry(QRect(10, 70, 410, 461));
         checkTaskFileBtn = new QPushButton(groupBox);
         checkTaskFileBtn->setObjectName(QStringLiteral("checkTaskFileBtn"));
         checkTaskFileBtn->setGeometry(QRect(10, 20, 411, 23));
@@ -66,29 +68,35 @@ public:
         label->setGeometry(QRect(170, 50, 91, 16));
         groupBox_2 = new QGroupBox(centralWidget);
         groupBox_2->setObjectName(QStringLiteral("groupBox_2"));
-        groupBox_2->setGeometry(QRect(450, 20, 551, 541));
-        textBrowser = new QTextBrowser(groupBox_2);
-        textBrowser->setObjectName(QStringLiteral("textBrowser"));
-        textBrowser->setGeometry(QRect(20, 50, 521, 31));
-        textBrowser_2 = new QTextBrowser(groupBox_2);
-        textBrowser_2->setObjectName(QStringLiteral("textBrowser_2"));
-        textBrowser_2->setGeometry(QRect(20, 110, 241, 421));
-        textBrowser_3 = new QTextBrowser(groupBox_2);
-        textBrowser_3->setObjectName(QStringLiteral("textBrowser_3"));
-        textBrowser_3->setGeometry(QRect(290, 110, 251, 421));
+        groupBox_2->setGeometry(QRect(450, 20, 1091, 601));
+        runQueueTextBrowser = new QTextBrowser(groupBox_2);
+        runQueueTextBrowser->setObjectName(QStringLiteral("runQueueTextBrowser"));
+        runQueueTextBrowser->setGeometry(QRect(10, 170, 221, 421));
+        readyQueueTextBrowser = new QTextBrowser(groupBox_2);
+        readyQueueTextBrowser->setObjectName(QStringLiteral("readyQueueTextBrowser"));
+        readyQueueTextBrowser->setGeometry(QRect(240, 110, 400, 481));
+        waitQueueTextBrowser = new QTextBrowser(groupBox_2);
+        waitQueueTextBrowser->setObjectName(QStringLiteral("waitQueueTextBrowser"));
+        waitQueueTextBrowser->setGeometry(QRect(650, 110, 400, 481));
         label_2 = new QLabel(groupBox_2);
         label_2->setObjectName(QStringLiteral("label_2"));
-        label_2->setGeometry(QRect(110, 90, 54, 12));
+        label_2->setGeometry(QRect(400, 80, 54, 12));
         label_3 = new QLabel(groupBox_2);
         label_3->setObjectName(QStringLiteral("label_3"));
-        label_3->setGeometry(QRect(390, 90, 54, 12));
+        label_3->setGeometry(QRect(810, 80, 54, 12));
         label_4 = new QLabel(groupBox_2);
         label_4->setObjectName(QStringLiteral("label_4"));
-        label_4->setGeometry(QRect(240, 30, 54, 12));
+        label_4->setGeometry(QRect(90, 60, 54, 12));
+        label_5 = new QLabel(groupBox_2);
+        label_5->setObjectName(QStringLiteral("label_5"));
+        label_5->setGeometry(QRect(20, 120, 54, 12));
+        curProLab = new QLabel(groupBox_2);
+        curProLab->setObjectName(QStringLiteral("curProLab"));
+        curProLab->setGeometry(QRect(90, 120, 54, 12));
         RunProcess->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(RunProcess);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1016, 23));
+        menuBar->setGeometry(QRect(0, 0, 1565, 23));
         RunProcess->setMenuBar(menuBar);
         mainToolBar = new QToolBar(RunProcess);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
@@ -112,6 +120,8 @@ public:
         label_2->setText(QApplication::translate("RunProcess", "\345\260\261\347\273\252\351\230\237\345\210\227", Q_NULLPTR));
         label_3->setText(QApplication::translate("RunProcess", "\351\230\273\345\241\236\351\230\237\345\210\227", Q_NULLPTR));
         label_4->setText(QApplication::translate("RunProcess", "\350\277\220\350\241\214\351\230\237\345\210\227", Q_NULLPTR));
+        label_5->setText(QApplication::translate("RunProcess", "\345\275\223\345\211\215\350\277\220\350\241\214\357\274\232", Q_NULLPTR));
+        curProLab->setText(QApplication::translate("RunProcess", "TextLabel", Q_NULLPTR));
     } // retranslateUi
 
 };

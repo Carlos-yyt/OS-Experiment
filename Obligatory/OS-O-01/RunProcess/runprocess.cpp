@@ -28,11 +28,48 @@ RunProcess::~RunProcess()
 
 void RunProcess::on_checkTaskFileBtn_clicked()
 {
-    if(proSch.io->loadTaskFile(INPUTFILENAME)){//如果文件有更新
-        //TODO 界面上给点显示
+    if(proSch.checkTaskFileImmediately()){//如果文件有更新
+        refreshWaitQueueBroswer();
+        refreshReadyQueueBroswer();
     }
 }
 
 void RunProcess::updateTaskBroswer(QString newTaskStr){
     ui->taskFiletextBrowser->append(newTaskStr);
+}
+
+void RunProcess::refreshWaitQueueBroswer(){
+    ui->waitQueueTextBrowser->clear();
+    ui->waitQueueTextBrowser->append("ProID\tPriority\tInTime(s)\tInstruction");//写表头
+    int head=proSch.pHead_wait_queue;
+    PCBNode pcbnode;
+    QString taskStr;
+    while (head!=0) {
+        taskStr.clear();
+        pcbnode=proSch.mem->PCBList[head-1];
+        taskStr+=QString::number(pcbnode.pcb.ProID)+"\t";
+        taskStr+=QString::number(pcbnode.pcb.Priority)+"\t";
+        taskStr+=QString::number(pcbnode.pcb.in_time)+"\t";
+        taskStr+=QString::number(pcbnode.pcb.InstrucNum);
+        ui->waitQueueTextBrowser->append(taskStr);
+        head=pcbnode.next;
+    }
+}
+
+void RunProcess::refreshReadyQueueBroswer(){
+    ui->readyQueueTextBrowser->clear();
+    ui->readyQueueTextBrowser->append("ProID\tPriority\tInTime(s)\tInstruction");//写表头
+    int head=proSch.pHead_ready_queue;
+    PCBNode pcbnode;
+    QString taskStr;
+    while (head!=0) {
+        taskStr.clear();
+        pcbnode=proSch.mem->PCBList[head-1];
+        taskStr+=QString::number(pcbnode.pcb.ProID)+"\t";
+        taskStr+=QString::number(pcbnode.pcb.Priority)+"\t";
+        taskStr+=QString::number(pcbnode.pcb.in_time)+"\t";
+        taskStr+=QString::number(pcbnode.pcb.ProID);
+        ui->readyQueueTextBrowser->append(taskStr);
+        head=pcbnode.next;
+    }
 }

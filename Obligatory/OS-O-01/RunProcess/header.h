@@ -61,9 +61,9 @@ class PCB
 public:
     int ProID;//进程编号
     int Priority;//进程优先级
-    //int PSW;//进程状态
-
+    int in_time;//作业生成时间
     int InstrucNum;//进程包含的指令数目
+
     vector <instruction> iv;//存放指令队列
 
     int PC;//程序计数器信息
@@ -141,7 +141,8 @@ public:
 
     processScheduling();
     void create();//创建进程
-    void checkTaskFileImmediately();//检查一下有没有新作业需求
+    //void
+    bool checkTaskFileImmediately();//检查一下有没有新作业需求
 
 private slots:
     void checkTaskFile_5sec();//自动的5秒检查一次
