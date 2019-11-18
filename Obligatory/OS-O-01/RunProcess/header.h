@@ -10,6 +10,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QtDebug>
+#include <QTimer>
 
 using namespace std;
 
@@ -90,6 +91,19 @@ public:
     vector <vector <instruction>> programList;//程序段
 };
 
+//计时器类
+class timeThread:public QThread{
+    Q_OBJECT
+public:
+    timeThread(int interruptIntervalSecond);
+protected:
+    int ms=0;//中断间隔时间（毫秒）
+    QTimer *time;
+    void run() Q_DECL_OVERRIDE;
+signals:
+    void interruptSignal();//中断信号
+};
+
 //帮助进程调度模块与外界进行txt形式的通讯，这里使用多线程
 class IO:public QObject
 {
@@ -116,6 +130,7 @@ public:
     CPU *cpu;//处理器
     int num_process=0;//已产出的进程
 
+
     //队列
     int p_running_queue = 0;//表示运行队列指针
     int pHead_ready_queue = 0;//表示准备队列的头部指针
@@ -126,7 +141,10 @@ public:
 
     processScheduling();
     void create();//创建进程
-    void checkTaskFile();//检查一下有没有新作业需求
+    void checkTaskFileImmediately();//检查一下有没有新作业需求
+
+private slots:
+    void checkTaskFile_5sec();//自动的5秒检查一次
 };
 
 //处理器类

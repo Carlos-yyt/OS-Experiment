@@ -8,6 +8,7 @@ INPUT(
 ./release\processscheduling.o
 ./release\runprocess.o
 ./release\task.o
+./release\timethread.o
 ./release\moc_header.o
 ./release\moc_runprocess.o
 );

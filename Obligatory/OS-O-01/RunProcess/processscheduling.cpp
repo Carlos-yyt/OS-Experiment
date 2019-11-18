@@ -4,9 +4,10 @@ processScheduling::processScheduling(){
     io=new IO();
     mem=new Memory();
     cpu=new CPU();
+
 }
 
-void processScheduling::checkTaskFile(){
+void processScheduling::checkTaskFileImmediately(){
     if(io->loadTaskFile(INPUTFILENAME)){
         vector <PCBNode>::const_iterator i;//不可修改的迭代器
         PCBNode tempPCBNode;
@@ -42,4 +43,8 @@ void processScheduling::checkTaskFile(){
             }
         }
     }
+}
+
+void processScheduling::checkTaskFile_5sec(){
+    checkTaskFileImmediately();
 }

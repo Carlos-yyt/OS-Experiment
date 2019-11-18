@@ -33,7 +33,8 @@ SOURCES += \
         pcbnode.cpp \
         processscheduling.cpp \
         runprocess.cpp \
-        task.cpp
+        task.cpp \
+        timethread.cpp
 
 HEADERS += \
         header.h \

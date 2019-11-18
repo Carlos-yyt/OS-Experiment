@@ -13,6 +13,7 @@ class RunProcess : public QMainWindow
     Q_OBJECT
 
 public:
+    timeThread *autoCheckTaskFile_5sec;
     processScheduling proSch;
     explicit RunProcess(QWidget *parent = nullptr);
     ~RunProcess();

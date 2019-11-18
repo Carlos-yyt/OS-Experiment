@@ -8,6 +8,7 @@ INPUT(
 ./debug\processscheduling.o
 ./debug\runprocess.o
 ./debug\task.o
+./debug\timethread.o
 ./debug\moc_header.o
 ./debug\moc_runprocess.o
 );
