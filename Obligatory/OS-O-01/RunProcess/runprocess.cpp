@@ -7,6 +7,8 @@ RunProcess::RunProcess(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    connect(&proSch,SIGNAL(callForUpDateLcdNum(int)),this,SLOT(updateTimeLcdNum(int)));
+
     //5秒检查一次task作业
     autoCheckTaskFile_5sec=new timeThread(5);
     autoCheckTaskFile_5sec->start();
@@ -72,4 +74,13 @@ void RunProcess::refreshReadyQueueBroswer(){
         ui->readyQueueTextBrowser->append(taskStr);
         head=pcbnode.next;
     }
+}
+
+void RunProcess::updateTimeLcdNum(int time){
+    ui->timeLcdNum->display(time);
+}
+
+void RunProcess::on_newProBtn_clicked()
+{
+    //TODO 生成随机进程
 }

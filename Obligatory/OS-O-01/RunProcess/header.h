@@ -28,10 +28,29 @@ const QString OUTPUTFILENAME = "";//TODO
 
 #define random(x) (rand()%x) //生成 [0,x] 内的一个整型随机数
 
+//处理器状态
 enum CPUState
 {
     KERNELMODE,//内核态
     USERMODE//用户态
+};
+
+struct Ready_Queue {
+    int RqNum;//位置编号
+    int RqTimes;//进入就绪队列时间
+};
+
+struct Wait_Queue
+{
+    int BqNum;//位置编号
+    int BqTimes;//进入阻塞队列时间
+};
+
+//进程状态
+enum PSW{
+    run,
+    ready,
+    wait
 };
 
 //存放一条指令
@@ -55,20 +74,35 @@ public:
     Task(int _task_id,int _priority,int _ins_num,int _in_time);
 };
 
-//作业控制块
+//进程运行时间列表的一项
+struct RunTime
+{
+    int StartTime;//进程开始运行时间
+    int duration;//时长
+};
+
+//控制块
 class PCB
 {
 public:
     int ProID;//进程编号
     int Priority;//进程优先级
     int in_time;//作业生成时间
-    int InstrucNum;//进程包含的指令数目
+    int end_time;//进程结束时间
 
+    PSW psw;//进程状态
+
+    list<RunTime> RunTimes;//进程运行时间列表
+    int TurnTimes;//进程周转时间统计
+
+    int InstrucNum;//进程包含的指令数目
     vector <instruction> iv;//存放指令队列
 
-    int PC;//程序计数器信息
-    int IR;//指令寄存器信息
+    int PC;//下一条将执行的指令编号；
+    int IR;//正在执行的指令编号
 
+    std::list<Ready_Queue> RQ;//在就绪队列信息列表（包括：位置编号（RqNum）、进入就绪队列时间（RqTimes））；
+    std::list<Wait_Queue> BQ;//在阻塞队列信息列表（包括：位置编号（BqNum）、进程进入阻塞队列时间（ BqTimes））；
     PCB();
     PCB(Task _task,int _ProID);
 };
@@ -78,7 +112,7 @@ class PCBNode
 {
 public:
     PCB pcb;
-    int next;
+    int next;//指向所在队列的下一个PCB
     PCBNode();
     PCBNode(PCB _pcb,int _next);//PCB _pcb,int _next
 };
@@ -130,7 +164,8 @@ public:
     CPU *cpu;//处理器
     int num_process=0;//已产出的进程
 
-
+    timeThread *timeSec;//进程调度用的统一时钟量
+    int TIME;//进程调度模块的时钟，由timeTread驱动
     //队列
     int p_running_queue = 0;//表示运行队列指针
     int pHead_ready_queue = 0;//表示准备队列的头部指针
@@ -141,10 +176,16 @@ public:
 
     processScheduling();
     void create();//创建进程
-    //void
+    void Exchangeout();//模拟进程从运行队列调出回到就绪队列的原语
+    void wait();//模拟进程从运行队列调出进入等待队列的原语
+    void wakeUp();//模拟进程从等待队列被唤醒调回就绪队列的原语
+    void Selectin();//模拟进程从就绪队列调入运行队列的原语
+    void Withdraw();//静态函数，模拟进程撤销原语
     bool checkTaskFileImmediately();//检查一下有没有新作业需求
-
+signals:
+    void callForUpDateLcdNum(int time);
 private slots:
+    void timeAdd();//时间加一秒
     void checkTaskFile_5sec();//自动的5秒检查一次
 };
 

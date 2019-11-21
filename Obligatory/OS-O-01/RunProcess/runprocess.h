@@ -24,6 +24,7 @@ public:
 private slots:
     void on_checkTaskFileBtn_clicked();//手动检查一下有无新作业请求
     void updateTaskBroswer(QString newTaskStr);//向展示框追加一条作业请求记录
+    void updateTimeLcdNum(int time);//刷新时间显示器
 private:
     Ui::RunProcess *ui;
 };
