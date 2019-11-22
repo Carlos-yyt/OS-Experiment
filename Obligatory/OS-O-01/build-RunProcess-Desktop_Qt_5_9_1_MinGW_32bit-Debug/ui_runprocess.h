@@ -35,6 +35,7 @@ public:
     QTextBrowser *taskFiletextBrowser;
     QPushButton *checkTaskFileBtn;
     QLabel *label;
+    QPushButton *newProBtn;
     QGroupBox *groupBox_2;
     QTextBrowser *runQueueTextBrowser;
     QTextBrowser *readyQueueTextBrowser;
@@ -64,10 +65,13 @@ public:
         taskFiletextBrowser->setGeometry(QRect(10, 130, 410, 461));
         checkTaskFileBtn = new QPushButton(groupBox);
         checkTaskFileBtn->setObjectName(QStringLiteral("checkTaskFileBtn"));
-        checkTaskFileBtn->setGeometry(QRect(10, 20, 411, 61));
+        checkTaskFileBtn->setGeometry(QRect(10, 20, 271, 61));
         label = new QLabel(groupBox);
         label->setObjectName(QStringLiteral("label"));
         label->setGeometry(QRect(170, 90, 91, 16));
+        newProBtn = new QPushButton(groupBox);
+        newProBtn->setObjectName(QStringLiteral("newProBtn"));
+        newProBtn->setGeometry(QRect(290, 20, 131, 61));
         groupBox_2 = new QGroupBox(centralWidget);
         groupBox_2->setObjectName(QStringLiteral("groupBox_2"));
         groupBox_2->setGeometry(QRect(450, 20, 1091, 601));
@@ -121,6 +125,7 @@ public:
         groupBox->setTitle(QApplication::translate("RunProcess", "\344\275\234\344\270\232\347\224\263\350\257\267\346\216\245\346\224\266\346\250\241\345\235\227", Q_NULLPTR));
         checkTaskFileBtn->setText(QApplication::translate("RunProcess", "\344\270\200\351\224\256\344\270\272\346\211\200\346\234\211\344\275\234\344\270\232\350\257\267\346\261\202\345\272\217\345\210\227\345\210\233\345\273\272\350\277\233\347\250\213", Q_NULLPTR));
         label->setText(QApplication::translate("RunProcess", "\344\275\234\344\270\232\350\257\267\346\261\202\345\272\217\345\210\227\357\274\232", Q_NULLPTR));
+        newProBtn->setText(QApplication::translate("RunProcess", "\351\232\217\346\234\272\346\226\260\350\277\233\347\250\213", Q_NULLPTR));
         groupBox_2->setTitle(QApplication::translate("RunProcess", "\350\277\233\347\250\213\350\260\203\345\272\246\346\250\241\345\235\227", Q_NULLPTR));
         label_2->setText(QApplication::translate("RunProcess", "\345\260\261\347\273\252\351\230\237\345\210\227", Q_NULLPTR));
         label_3->setText(QApplication::translate("RunProcess", "\351\230\273\345\241\236\351\230\237\345\210\227", Q_NULLPTR));

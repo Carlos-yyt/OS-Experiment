@@ -7,6 +7,8 @@ RunProcess::RunProcess(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    connect(&proSch,SIGNAL(askRefreshQueue()),this,SLOT(refreshQueue()));
+
     connect(&proSch,SIGNAL(callForUpDateLcdNum(int)),this,SLOT(updateTimeLcdNum(int)));
 
     //5秒检查一次task作业
@@ -83,4 +85,9 @@ void RunProcess::updateTimeLcdNum(int time){
 void RunProcess::on_newProBtn_clicked()
 {
     //TODO 生成随机进程
+}
+
+void RunProcess::refreshQueue(){
+    refreshWaitQueueBroswer();
+    refreshReadyQueueBroswer();
 }

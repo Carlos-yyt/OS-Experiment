@@ -60,6 +60,7 @@ public:
     int ins_id;//指令的id
     int ins_state;//指令的类型
     instruction(int _ins_id, int _ins_state);
+    instruction();
 };
 
 //进程调度模块从txt文件中读出内容形成的作业
@@ -182,8 +183,10 @@ public:
     void Selectin();//模拟进程从就绪队列调入运行队列的原语
     void Withdraw();//静态函数，模拟进程撤销原语
     bool checkTaskFileImmediately();//检查一下有没有新作业需求
+    void work();//开始调度工作
 signals:
     void callForUpDateLcdNum(int time);
+    void askRefreshQueue();
 private slots:
     void timeAdd();//时间加一秒
     void checkTaskFile_5sec();//自动的5秒检查一次

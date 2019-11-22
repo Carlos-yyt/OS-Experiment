@@ -62,7 +62,7 @@
       <string>作业请求序列：</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton">
+    <widget class="QPushButton" name="newProBtn">
      <property name="geometry">
       <rect>
        <x>290</x>
