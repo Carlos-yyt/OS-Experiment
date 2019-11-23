@@ -145,7 +145,7 @@ class IO:public QObject
     Q_OBJECT
 public:
     int taskNum;//已读入的作业数量
-    vector <vector <instruction>> programList;//PCB表，有新的task就去更新Memory里的programList
+    vector <vector <instruction>> programList;//指令序列表，有新的task就去更新Memory里的programList
     vector <PCBNode> PCBList;//PCB表
     //加载作业文件
     bool loadTaskFile(QString fileName);
@@ -155,9 +155,11 @@ signals:
 };
 
 //进程调度类
-class processScheduling:public QObject
+class processScheduling:public QThread
 {
     Q_OBJECT
+protected:
+    void run() Q_DECL_OVERRIDE;
 public:
     //核心部件
     IO *io;//从外界读作业
@@ -166,7 +168,7 @@ public:
     int num_process=0;//已产出的进程
 
     timeThread *timeSec;//进程调度用的统一时钟量
-    int TIME;//进程调度模块的时钟，由timeTread驱动
+    int TIME=0;//进程调度模块的时钟，由timeTread驱动
     //队列
     int p_running_queue = 0;//表示运行队列指针
     int pHead_ready_queue = 0;//表示准备队列的头部指针
@@ -175,6 +177,7 @@ public:
     int pHead_wait_queue = 0;//表示阻塞队列的头部指针
     int pTail_wait_queue = 0;//表示阻塞队列的尾部指针
 
+    int loadTimes=0;//表示加载过几次作业，可以让调度函数在加载第一次作业之前循环的慢一点，否则log太多了没法看
     processScheduling();
     void create();//创建进程
     void Exchangeout();//模拟进程从运行队列调出回到就绪队列的原语
@@ -184,9 +187,12 @@ public:
     void Withdraw();//静态函数，模拟进程撤销原语
     bool checkTaskFileImmediately();//检查一下有没有新作业需求
     void work();//开始调度工作
+    void wakeUpIfWaitMoreThan5Sec();//阻塞超过5秒就唤醒
 signals:
     void callForUpDateLcdNum(int time);
     void askRefreshQueue();
+    void askRefreshIR_PC_RunQueue();
+    void askOutPutLog(QString str);
 private slots:
     void timeAdd();//时间加一秒
     void checkTaskFile_5sec();//自动的5秒检查一次

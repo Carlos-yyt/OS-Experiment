@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1565</width>
-    <height>726</height>
+    <width>1737</width>
+    <height>698</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -81,7 +81,7 @@
      <rect>
       <x>450</x>
       <y>20</y>
-      <width>1091</width>
+      <width>991</width>
       <height>601</height>
      </rect>
     </property>
@@ -92,9 +92,9 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>170</y>
+       <y>180</y>
        <width>221</width>
-       <height>421</height>
+       <height>411</height>
       </rect>
      </property>
     </widget>
@@ -103,7 +103,7 @@
       <rect>
        <x>240</x>
        <y>110</y>
-       <width>400</width>
+       <width>361</width>
        <height>481</height>
       </rect>
      </property>
@@ -111,9 +111,9 @@
     <widget class="QTextBrowser" name="waitQueueTextBrowser">
      <property name="geometry">
       <rect>
-       <x>650</x>
+       <x>610</x>
        <y>110</y>
-       <width>400</width>
+       <width>361</width>
        <height>481</height>
       </rect>
      </property>
@@ -134,7 +134,7 @@
     <widget class="QLabel" name="label_3">
      <property name="geometry">
       <rect>
-       <x>810</x>
+       <x>750</x>
        <y>80</y>
        <width>54</width>
        <height>12</height>
@@ -161,37 +161,160 @@
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>120</y>
+       <y>100</y>
        <width>54</width>
        <height>12</height>
       </rect>
      </property>
      <property name="text">
-      <string>当前运行：</string>
+      <string>当前进程：</string>
      </property>
     </widget>
     <widget class="QLabel" name="curProLab">
      <property name="geometry">
       <rect>
-       <x>90</x>
+       <x>100</x>
+       <y>100</y>
+       <width>54</width>
+       <height>12</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>暂无数据</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_6">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>140</y>
+       <width>54</width>
+       <height>12</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>IR:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_7">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>160</y>
+       <width>54</width>
+       <height>12</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>PC:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="IRLab">
+     <property name="geometry">
+      <rect>
+       <x>100</x>
+       <y>140</y>
+       <width>54</width>
+       <height>12</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>暂无数据</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="PCLab">
+     <property name="geometry">
+      <rect>
+       <x>100</x>
+       <y>160</y>
+       <width>54</width>
+       <height>12</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>暂无数据</string>
+     </property>
+    </widget>
+    <widget class="QLCDNumber" name="timeLcdNum">
+     <property name="geometry">
+      <rect>
+       <x>300</x>
+       <y>20</y>
+       <width>111</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="segmentStyle">
+      <enum>QLCDNumber::Flat</enum>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_8">
+     <property name="geometry">
+      <rect>
+       <x>230</x>
+       <y>30</y>
+       <width>54</width>
+       <height>12</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>计时器：</string>
+     </property>
+     <property name="textFormat">
+      <enum>Qt::AutoText</enum>
+     </property>
+     <property name="textInteractionFlags">
+      <set>Qt::LinksAccessibleByMouse</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_9">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
        <y>120</y>
        <width>54</width>
        <height>12</height>
       </rect>
      </property>
      <property name="text">
-      <string>TextLabel</string>
+      <string>当前指令：</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="intrucLab">
+     <property name="geometry">
+      <rect>
+       <x>100</x>
+       <y>120</y>
+       <width>54</width>
+       <height>12</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>暂无数据</string>
      </property>
     </widget>
    </widget>
-   <widget class="QLCDNumber" name="timeLcdNum">
+   <widget class="QTextBrowser" name="outPutTextBroswer">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>630</y>
-      <width>101</width>
-      <height>31</height>
+      <x>1440</x>
+      <y>130</y>
+      <width>291</width>
+      <height>481</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_10">
+    <property name="geometry">
+     <rect>
+      <x>1550</x>
+      <y>100</y>
+      <width>71</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>总输出文档</string>
     </property>
    </widget>
   </widget>
@@ -200,7 +323,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1565</width>
+     <width>1737</width>
      <height>23</height>
     </rect>
    </property>

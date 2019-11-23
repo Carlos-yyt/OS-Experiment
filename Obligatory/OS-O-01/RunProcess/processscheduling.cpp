@@ -12,6 +12,7 @@ processScheduling::processScheduling(){
 
 bool processScheduling::checkTaskFileImmediately(){
     if(io->loadTaskFile(INPUTFILENAME)){
+        this->mem->programList=this->io->programList;//指令集更新
         vector <PCBNode>::const_iterator i;//不可修改的迭代器
         PCBNode tempPCBNode;
         RunTime tempRunTime;
@@ -40,6 +41,7 @@ bool processScheduling::checkTaskFileImmediately(){
                 mem->PCBList.push_back(tempPCBNode);
                 pHead_ready_queue=int(mem->PCBList.size());//头部指针等于刚插进去的一个PCBNode，所以是从1开始
                 pTail_ready_queue=pHead_ready_queue;
+                emit askOutPutLog("Process No."+QString::number(tempPCBNode.pcb.ProID)+" [Task] ---> [Ready]");
             }else {
                 //就绪队列不为空
                 mem->PCBList.back().next=pTail_ready_queue=int(mem->PCBList.size()+1);//+1后的位置是一会儿要插的地方
@@ -48,8 +50,10 @@ bool processScheduling::checkTaskFileImmediately(){
                 tempReady_Queue.RqTimes=TIME;
                 tempPCBNode.pcb.RQ.push_back(tempReady_Queue);
                 mem->PCBList.push_back(tempPCBNode);
+                emit askOutPutLog("Process No."+QString::number(tempPCBNode.pcb.ProID)+" [Task] ---> [Ready]");
             }
             num_ready++;
+            num_process++;
             i++;
         }
 
@@ -76,6 +80,7 @@ bool processScheduling::checkTaskFileImmediately(){
                 mem->PCBList.push_back(tempPCBNode);
                 pHead_wait_queue=int(mem->PCBList.size());//头部指针等于刚插进去的一个PCBNode
                 pTail_wait_queue=pHead_wait_queue;
+                emit askOutPutLog("Process No."+QString::number(tempPCBNode.pcb.ProID)+" [Task] ---> [Block]");
             }else {
                 //阻塞队列不为空
                 mem->PCBList.back().next=pTail_wait_queue=int(mem->PCBList.size()+1);//+1后的位置是一会儿要插的地方
@@ -84,7 +89,9 @@ bool processScheduling::checkTaskFileImmediately(){
                 tempWait_Queue.BqTimes=TIME;
                 tempPCBNode.pcb.BQ.push_back(tempWait_Queue);
                 mem->PCBList.push_back(tempPCBNode);
+                emit askOutPutLog("Process No."+QString::number(tempPCBNode.pcb.ProID)+" [Task] ---> [Block]");
             }
+            num_process++;
         }
         return  true;
     }else {
@@ -93,11 +100,15 @@ bool processScheduling::checkTaskFileImmediately(){
 }
 
 void processScheduling::checkTaskFile_5sec(){
+    qDebug()<<"Enter function processScheduling::checkTaskFile_5sec() at time "<<QString::number(TIME);
     checkTaskFileImmediately();
 }
 
 void processScheduling::timeAdd(){
     TIME++;
+    if(TIME%5==0){
+        wakeUpIfWaitMoreThan5Sec();
+    }
     emit callForUpDateLcdNum(TIME);
 }
 
@@ -110,6 +121,10 @@ void processScheduling::Exchangeout(){
 
     tPCBNode.next=0;
     pTail_ready_queue=mem->PCBList[pTail_ready_queue-1].next=tPCBNode.pcb.ProID;//尾插，放入就绪队列
+
+    if(pHead_ready_queue==0){
+        pHead_ready_queue=pTail_ready_queue;
+    }
 
     tPCBNode.pcb.psw=PSW::ready;
 
@@ -130,6 +145,8 @@ void processScheduling::Exchangeout(){
     tPCBNode.pcb.RQ.push_back(tReady);
 
     mem->PCBList[pTail_ready_queue-1]=tPCBNode;//放回
+
+    emit askOutPutLog("Process No."+QString::number(tPCBNode.pcb.ProID)+" [Run] ---> [Ready]");
 }
 
 //运行-->等待
@@ -141,6 +158,10 @@ void processScheduling::wait(){
 
     tPCBNode.next=0;
     pTail_wait_queue=mem->PCBList[pTail_wait_queue-1].next=tPCBNode.pcb.ProID;//尾插，放入阻塞队列
+
+    if(pHead_wait_queue==0){
+        pHead_wait_queue=pTail_wait_queue;
+    }
 
     tPCBNode.pcb.psw=PSW::wait;
 
@@ -161,17 +182,22 @@ void processScheduling::wait(){
     tPCBNode.pcb.PC=cpu->PC;
 
     mem->PCBList[pTail_wait_queue-1]=tPCBNode;//放回
+    emit askOutPutLog("Process No."+QString::number(tPCBNode.pcb.ProID)+" [Run] ---> [Block]");
 }
 
 //等待-->就绪
 void processScheduling::wakeUp(){
-    //因为该仿真设计中的wake充要条件是时间到5秒，所以必然是唤醒队首进程。
+    //因为本题中唤醒的条件是时间，所以必然是唤醒队首进程（先进的等待时间长）。
     PCBNode tPCBNode;
     tPCBNode=mem->PCBList[pHead_wait_queue-1];//取出
 
     pHead_wait_queue=tPCBNode.next;
     tPCBNode.next=0;
     pTail_ready_queue=mem->PCBList[pTail_ready_queue-1].next=tPCBNode.pcb.ProID;//尾插
+
+    if(pHead_ready_queue==0){
+        pHead_ready_queue=pTail_ready_queue;
+    }
 
     tPCBNode.pcb.psw=PSW::ready;
 
@@ -185,8 +211,10 @@ void processScheduling::wakeUp(){
     Ready_Queue tReady;
     tReady.RqNum=tPCBNode.pcb.RQ.size()+1;
     tReady.RqTimes=TIME;
+    tPCBNode.pcb.RQ.push_back(tReady);
 
     mem->PCBList[pTail_ready_queue-1]=tPCBNode;//放回
+    emit askOutPutLog("Process No."+QString::number(tPCBNode.pcb.ProID)+" [Block] ---> [Ready]");
 }
 
 //就绪-->运行
@@ -204,7 +232,7 @@ void processScheduling::Selectin(){
 
     //处理器恢复
     cpu->IR=tPCBNode.pcb.IR;
-    cpu->PC=tPCBNode.pcb.PC;
+    cpu->PC=tPCBNode.pcb.PC=tPCBNode.pcb.IR+1;
 
     //就绪队列信息列表
     Ready_Queue tReady=tPCBNode.pcb.RQ.back();
@@ -213,6 +241,7 @@ void processScheduling::Selectin(){
     tPCBNode.pcb.RQ.push_back(tReady);
 
     mem->PCBList[p_running_queue-1]=tPCBNode;
+    emit askOutPutLog("Process No."+QString::number(tPCBNode.pcb.ProID)+" [Ready] ---> [Run]");
 }
 
 //撤销
@@ -234,22 +263,46 @@ void processScheduling::Withdraw(){
 //        tPCBNode.pcb.TurnTimes+=it->duration;
 //    }
     tPCBNode.pcb.TurnTimes=TIME-tPCBNode.pcb.TurnTimes;
+    emit askOutPutLog("Process No."+QString::number(tPCBNode.pcb.ProID)+" [Run] ---> [Delete]");
 }
 
 //开始调度工作
 void processScheduling::work(){
+    //qDebug()<<"Enter function processScheduling::work() at time:"+QString::number(TIME);
+//    if(loadTimes==0){//一次都没加载过就不要疯狂输出log了
+//        QThread::msleep(500);
+//    }
     vector<instruction> IV;
+    int timeKeeper=TIME;//用于和TIME变量做对比以判断时间流逝
+
+    qDebug()<<"pHead_wait_queue:"<<QString::number(pHead_wait_queue)
+           <<"\tpHead_ready_queue:"<<QString::number(pHead_ready_queue)
+          <<"\tp_running_queue:"<<QString::number(p_running_queue);
+
     while (!(pHead_wait_queue==0 && pHead_ready_queue==0 && p_running_queue==0)) {//三个队列都空则结束工作
+        if(p_running_queue==0 && pHead_ready_queue==0){
+            continue;
+        }
         this->Selectin();
+        timeKeeper=TIME;
         emit askRefreshQueue();
-        IV=mem->PCBList[p_running_queue-1].pcb.iv;
-        for(vector<instruction>::iterator iter=IV.begin()+cpu->IR;iter!=IV.end();iter++){
-            if(TIME%4==0){
+        IV=mem->programList[p_running_queue-1];
+        //IV=mem->PCBList[p_running_queue-1].pcb.iv;
+        for(vector<instruction>::iterator iter=IV.begin()+cpu->IR-1;iter!=IV.end();iter++){
+            if(TIME-timeKeeper>4){
                 //时间片轮转
-                 Exchangeout();
+                 Exchangeout();                 
                  Selectin();
+                 emit askRefreshQueue();
             }
-            //延迟一秒
+            if(iter==IV.end()){//执行完所有的指令
+                Withdraw();
+                emit askRefreshQueue();
+                break;
+            }
+            QThread::msleep(1000);//执行一条指令需要1秒
+            emit askRefreshIR_PC_RunQueue();
+            emit askOutPutLog("Process <"+QString::number(mem->PCBList[p_running_queue-1].pcb.ProID)+"> i["+QString::number(iter->ins_id)+"]="+QString::number(iter->ins_state));
             cpu->IR++;
             cpu->PC=cpu->IR+1;
             if(iter->ins_state==0){
@@ -264,11 +317,24 @@ void processScheduling::work(){
                 emit askRefreshQueue();
                 break;
             }
-            if(iter==IV.end()){//执行完所有的指令
-                Exchangeout();
-                emit askRefreshQueue();
-                break;
-            }
         }
     }
+    if(loadTimes!=0){
+        qDebug()<<"I reach here!";
+        system("pause");//不要立即结束程序
+    }
+}
+
+void processScheduling::run(){
+    work();
+    this->run();//循环执行
+}
+
+void processScheduling::wakeUpIfWaitMoreThan5Sec(){
+
+    while (pHead_wait_queue!=0 && (TIME-this->mem->PCBList[pHead_wait_queue-1].pcb.BQ.back().BqTimes)>=5) {//pHead_wait_queue!=0 一定要在前面，通过C++逻辑与的短路性避免第二个条件中back()的非法操作
+        wakeUp();
+        emit askRefreshQueue();
+    }
+
 }
