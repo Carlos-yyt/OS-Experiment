@@ -34,6 +34,7 @@ RunProcess::RunProcess(QWidget *parent) :
 
 RunProcess::~RunProcess()
 {
+    outPutLogFile.close();
     delete ui;
 }
 
@@ -118,9 +119,9 @@ void RunProcess::refreshPC_IR_RunningQueue(){
 }
 
 void RunProcess::outPutLog(QString str){
-    ui->outPutTextBroswer->append(str);
+    ui->outPutTextBroswer->append(str);//输出到屏幕
     str+="\r\n";
-    outPutLogFile.write(str.toUtf8(),str.toUtf8().length());
+    outPutLogFile.write(str.toUtf8(),str.toUtf8().length());//输出到文件
 }
 
 void RunProcess::createAJob(){

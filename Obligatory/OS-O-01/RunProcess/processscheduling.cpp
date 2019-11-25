@@ -246,9 +246,10 @@ void processScheduling::Selectin(){
 
 //撤销
 void processScheduling::Withdraw(){
+    int p=p_running_queue;
     PCBNode tPCBNode=mem->PCBList[p_running_queue-1];
     tPCBNode.pcb.end_time=TIME;
-
+    tPCBNode.next=0;
     p_running_queue=pHead_ready_queue;
 
     RunTime tRunTime=tPCBNode.pcb.RunTimes.back();
@@ -256,13 +257,8 @@ void processScheduling::Withdraw(){
     tPCBNode.pcb.RunTimes.pop_back();
     tPCBNode.pcb.RunTimes.push_back(tRunTime);
 
-//    //周转时间统计
-//    tPCBNode.pcb.TurnTimes=0;
-//    list<RunTime>::iterator it;
-//    for (it=tPCBNode.pcb.RunTimes.begin();it!=tPCBNode.pcb.RunTimes.end();i++) {
-//        tPCBNode.pcb.TurnTimes+=it->duration;
-//    }
     tPCBNode.pcb.TurnTimes=TIME-tPCBNode.pcb.TurnTimes;
+    mem->PCBList[p-1]=tPCBNode;
     emit askOutPutLog("Process No."+QString::number(tPCBNode.pcb.ProID)+" [Run] ---> [Delete]");
 }
 
@@ -275,13 +271,13 @@ void processScheduling::work(){
     vector<instruction> IV;
     int timeKeeper=TIME;//用于和TIME变量做对比以判断时间流逝
 
-    qDebug()<<"pHead_wait_queue:"<<QString::number(pHead_wait_queue)
-           <<"\tpHead_ready_queue:"<<QString::number(pHead_ready_queue)
-          <<"\tp_running_queue:"<<QString::number(p_running_queue);
+//    qDebug()<<"pHead_wait_queue:"<<QString::number(pHead_wait_queue)
+//           <<"\tpHead_ready_queue:"<<QString::number(pHead_ready_queue)
+//          <<"\tp_running_queue:"<<QString::number(p_running_queue);
 
     while (!(pHead_wait_queue==0 && pHead_ready_queue==0 && p_running_queue==0)) {//三个队列都空则结束工作
         if(p_running_queue==0 && pHead_ready_queue==0){
-            continue;
+            wakeUp();
         }
         this->Selectin();
         timeKeeper=TIME;
@@ -295,7 +291,7 @@ void processScheduling::work(){
                  Selectin();
                  emit askRefreshQueue();
             }
-            if(iter==IV.end()){//执行完所有的指令
+            if(iter+1==IV.end()){//执行完所有的指令
                 Withdraw();
                 emit askRefreshQueue();
                 break;

@@ -173,7 +173,7 @@ public:
     int p_running_queue = 0;//表示运行队列指针
     int pHead_ready_queue = 0;//表示准备队列的头部指针
     int pTail_ready_queue = 0;//表示准备队列的尾部指针
-    int num_ready;//就绪队列已有数量，规定不能超过5
+    int num_ready=0;//就绪队列已有数量，规定不能超过5
     int pHead_wait_queue = 0;//表示阻塞队列的头部指针
     int pTail_wait_queue = 0;//表示阻塞队列的尾部指针
 
